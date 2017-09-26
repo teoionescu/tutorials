@@ -18,6 +18,7 @@ sumOfLists = zipWith (+) [1,2,3,4,5] [6,7,8,9,10]
 evensUpTo = takeWhile (<= 20) [2,4..]
 multOfList = foldl (*) 1 [2,3,4,5]
 
+{- Tuple -}
 randTuple = (1,"Ima Tuple")
 
 doubleList nums =
@@ -79,6 +80,13 @@ defaultInt :: Int -> MaybeInt -> Int
 defaultInt defaultValue NoInt = defaultValue
 defaultInt _ (JustInt x) = x
 
+{- Type Synonyms and NewType -}
+type Point = (Double, Double)
+
+newtype Customer = Customer Int
+extract :: Customer -> Int
+extract (Customer i) = i
+{- data: newtype with more args -}
 
 {- Type Class Instances -}
 isElemInList :: Eq a => a -> [a] -> Bool
@@ -108,6 +116,10 @@ instance (Eq a) => Eq (Maybe' a) where
     (Just' _) == Nothing' = False
     (Just' x) == (Just' y) = x == y
 
+maybeExposerOfNum :: Num a => Maybe' a -> [Char]
+maybeExposerOfNum Nothing' = "Nuthin"
+maybeExposerOfNum (Just' _) = "Sumthin"
+
 {- Defining Type Classes -}
 data Point2 = Point2 Double Double
     deriving Show
@@ -115,20 +127,27 @@ data Point3 = Point3 Double Double Double
     deriving Show
 class MeasurableDistance a where
     distance :: a -> a -> Double
+    repeater :: a -> a
 
 instance MeasurableDistance Point2 where
     distance (Point2 x1 y1) (Point2 x2 y2) =
         sqrt(dx * dx + dy * dy)
         where dx = x1 - x2
               dy = y1 - y2
+    repeater (Point2 x y) = (Point2 x y)
 
 pathLength :: MeasurableDistance a => [a] -> Double
 pathLength [] = 0
 pathLength (_ : []) = 0
 pathLength (p0 : p1 : ps) = distance p0 p1 + pathLength (p1 : ps)
 
-
-
+{- Mona-Do -}
+first = [1,2,3]
+second = [1,2,3]
+pairs = do
+    x <- first
+    y <- second
+    return ( x*10 + y )
 
 {- Main -}
 main :: IO ()
